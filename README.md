@@ -1,1 +1,48 @@
-# level1_semantictextsimilarity-nlp-12
+# 1. 프로젝트 개요
+부스트캠프 5기 NLP Track의 Lv.1 project는 다양한 출처에서 얻어진 문장 쌍 데이터를 기반으로 STS task를 잘 수행할 수 있는 모델을 만드는 것이다.
+
+관련하여, NLP-12 자연산활어가철이조는 STS를 잘 소화할 수 있는 Deep learning PLM을 찾아 fine-tuning 하는 것을 기본 전제로 하였으며 크게 모델적인 개선과 데이터적인 정제 두 파트로 나누어 문제를 해결하고자 하였다.
+
+그렇기에, 기본적인 딥러닝 프레임워크 Pytorch, 자연어처리 PLM을 쉽게 사용할 수 있는 huggingface와 시각화를 위한 WandB를 사용하였고, V100이 주어지는 서버를 vscode를 SSH로 받아와 팀 전용 github와 연동하여 협업하였다.
+
+# 2. 프로젝트 팀 구성 및 역할
+- 변성훈(팀장) : 노션 자료 정리, EDA, 데이터 시각화, 모델별 output 분포 정리 및 분석
+- 김지현 : label error correction 자료조사, R-drop, special token adding 가설 구현, ensemble 구현 및 실험
+- 이예원 : 모델 리서치, 모델 성능 실험, 가설 하이퍼파라미터 대조군 비교 및 성능 실험, sheduler, k-fold 실험
+- 이상민 : 데이터 분포 고려 데이터 증강 실험, check_point, padding_cutting
+- 천재원 : 라벨 페널티, 스페셜 토큰 사용 아이디에이션 및 구현 / Rdrop, Sentence swap 구현 및 wandb 세팅 / 데이터 증강 아이디에이션
+
+# 3. 프로젝트 수행 절차 및 방법
+
+## 1) model 선정
+
+### 후보
+- BERT : RoBERTa 하위호환
+- **RoBERTa** : 무난히 성능이 좋고, ELECTRA와의 앙상블을 고려했을 때, 좋다고 판단
+- **ELECTRA** : 기본 성능이 보장되었고 generator와 discriminator로 학습해서 discriminator만 가져온다는 점에서 데이터셋이 크지 않은 우리의 환경에 적합.
+- ALBERT : 좋은 한국어 모델이 없어서 배제
+- DistillBERT : 경량화 모델로 배제
+- T5 : 큰 모델이기도 하고 시간 상 배제
+
+![image](https://user-images.githubusercontent.com/126854237/234342782-863f3dd5-3005-49f6-b232-93ab500bff5b.png)
+
+## 2) baseline code 수정
+- Early Stopping : 3번 연속 validation pearson score가 하락한다면, stop 하는 기능
+- Attention mask : baseline code는 input id만 사용하고 attention mask를 model에 넣어주지 않음을 확인. > attention mask도 추가
+- Wandb setting : project name은 사용 모델 이름, run name은 hyperparameter와 같은 특징을 사용해서 기록
+
+## 3) EDA
+dev.csv는 모든 label이 비교적 uniform
+좋은 제출 score를 가진 모델의 csv 분포를 분석해본 결과 test.csv도 uniform한 분포라고 가정
+
+
+## 4) 가설 구현
+
+## 5) hyperparameter tuning
+## 6) ensemble
+
+# 4. 프로젝트 수행 결과
+
+![image](https://user-images.githubusercontent.com/126854237/234345560-e7921bc6-d3ef-4ebd-ab24-d237b579ed33.png)
+
+- 최종 pearson : 0.9420
