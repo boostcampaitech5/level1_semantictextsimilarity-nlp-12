@@ -44,6 +44,7 @@ dev.csv는 모든 label이 비교적 uniform
 
 - Sentence Swap & R-Drop
   - Sentence Swap : 단순히 문장의 순서를 바꾼 경우에 대해서도 학습
+    - Sentence Swap(label != 0) : train data의 분포를 고려, label 0 data가 많아 label != 0 인 문장만 순서를 바꾼 경우 추가하여 학습
   - R-Drop : 그 때에 sentence1 [SEP] sentence2의 logit 값과 sentence2 [SEP] sentence1의 logit값의 차이 또한 Loss로 계산
   
 - Special Token Leverage : [NSMC], [SAMPLED], [RTT]등, Sample id에 제공된 해당 샘플의 출처 및 속성값을 Special Token으로 추가 후 사용
