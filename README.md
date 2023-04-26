@@ -63,7 +63,7 @@ dev.csv는 모든 label이 비교적 uniform
 ### weighted average ensemble
 - Ensemble 에 사용할 모델들의 실제 submit score 를 weight 로 사용하여 ensemble 모델의 예측 정확도를 높이려 노력
 - 해당 score 들은 softmax를 통과하여 각 logit 과 곱해진 후 합해지는 weighted sum 의 형태
-- 실험 결과, logit 들의 분포가 다를 경우(각 모델의 상관 관계가 낮을 경우) 성능 향상의 폭이 더 컸다.
+- 실험 결과 logit 들의 분포가 다를 경우(각 모델의 상관 관계가 낮을 경우) 성능 향상의 폭이 더 컸음
 <br><br>
 
 ### 실험 결과
