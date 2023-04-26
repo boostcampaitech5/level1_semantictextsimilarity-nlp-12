@@ -88,7 +88,8 @@ dev.csv는 모든 label이 비교적 uniform
   `평균 제출 score 가 더 높음에도 불구하고, roberta-large 를 함께 앙상블한 결과가 더 높은 score 를 가진다.`
   
 - 다양한 target 분포를 가진 모델을 앙상블 하면 성능이 높아진다.
-    3. submit score: 0.9324 (+0.0024)
+   
+   3. submit score: 0.9324 (+0.0024)
 
   |Model|submit score|
   |---|---|
@@ -99,7 +100,7 @@ dev.csv는 모든 label이 비교적 uniform
   |klue/roberta-large|0.8999|
   |kykim/electra-kor-base|0.9165|
 
-  `Target 값의 분포를 기준으로 각 모델을 보완 해 줄 수 있는 모델을 앙상블 한 결과가 더 높은 score 를 가진다 `
+  `Target 값의 분포를 기준으로 각 모델을 보완 해 줄 수 있는 모델을 앙상블 한 결과가 더 높은 score 를 가진다. `
   
 - 가장 높은 성능의 ensemble output
 
