@@ -60,7 +60,60 @@ dev.csv는 모든 label이 비교적 uniform
 
   
 ## 6) ensemble
+### weighted average ensemble
+- Ensemble 에 사용할 모델들의 실제 submit score 를 weight 로 사용하여 ensemble 모델의 예측 정확도를 높이려 노력
+- 해당 score 들은 softmax를 통과하여 각 logit 과 곱해진 후 합해지는 weighted sum 의 형태
+- 실험 결과, logit 들의 분포가 다를 경우(각 모델의 상관 관계가 낮을 경우) 성능 향상의 폭이 더 컸다.
+<br><br>
 
+### 실험 결과
+- 각 모델의 상관 관계가 낮을 수록 성능 향상의 폭이 크다.
+
+  1. submit score: 0.9248
+
+  |Model|submit score|
+  |---|---|
+  |snunlp/KR-ELECTRA-discriminator|0.9215|
+  |snunlp/KR-ELECTRA-discriminator|0.9212|
+  |snunlp/KR-ELECTRA-discriminator|0.9177|
+
+  2. submit score: 0.9300 (+0.0052)
+
+  |Model|submit score|
+  |---|---|
+  |snunlp/KR-ELECTRA-discriminator|0.9215|
+  |snunlp/KR-ELECTRA-discriminator|0.9212|
+  |klue/roberta-large|0.8999|
+
+  `평균 제출 score 가 더 높음에도 불구하고, roberta-large 를 함께 앙상블한 결과가 더 높은 score 를 가진다.`
+  
+- 다양한 target 분포를 가진 모델을 앙상블 하면 성능이 높아진다.
+    3. submit score: 0.9324 (+0.0024)
+
+  |Model|submit score|
+  |---|---|
+  |snunlp/KR-ELECTRA-discriminator|0.9215|
+  |snunlp/KR-ELECTRA-discriminator|0.9212|
+  |snunlp/KR-ELECTRA-discriminator|임의의 값|
+  |klue/roberta-large|0.9205|
+  |klue/roberta-large|0.8999|
+  |kykim/electra-kor-base|0.9165|
+
+  `Target 값의 분포를 기준으로 각 모델을 보완 해 줄 수 있는 모델을 앙상블 한 결과가 더 높은 score 를 가진다 `
+  
+- 가장 높은 성능의 ensemble output
+
+   4. submit score: 0.9352 (+0.0028) -> **최종 pearson : 0.9420**
+
+  |Model|submit score|
+  |---|---|
+  |snunlp/KR-ELECTRA-discriminator|0.9238|
+  |snunlp/KR-ELECTRA-discriminator|0.9232|
+  |klue/roberta-large|0.9205|
+  |kykim/electra-kor-base|0.9187|
+  |beomi/KcELECTRA-base|0.9221|
+  |monologg/koelectra-base-discriminator|0.9185|
+  
 # 4. 프로젝트 수행 결과
 
 ![image](https://user-images.githubusercontent.com/126854237/234345560-e7921bc6-d3ef-4ebd-ab24-d237b579ed33.png)
