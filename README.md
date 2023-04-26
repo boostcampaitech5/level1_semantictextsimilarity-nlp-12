@@ -35,6 +35,19 @@
 dev.csv는 모든 label이 비교적 uniform
 좋은 제출 score를 가진 모델의 csv 분포를 분석해본 결과 test.csv도 uniform한 분포라고 가정
 
+여러가지 방법으로 데이터 증강을 하였지만 그 중에서 실제로 결과 제출에 사용한 방법은 아래와 같다.
+
+우선 label 0의 샘플을 1000개로 줄이고 잘라낸 1000개에서 label 5를 다음과 같은 방식으로 증강하였다.
+Label 5의 샘플들은 모두 공통적으로 sentence 2의 문장이 sentence 1의 문장에 대해 1. 띄어쓰기가 하나 빠져 있거나 2. 문장 끝에 마침표가 추가로 2~3개 연달아 온다는 특징이 있다. 그래서 Okt의 형태소 분석 기능을 사용하여 아래와 같은 조합의 단어 쌍 띄어쓰기가 나온다면 해당 띄어쓰기를 지워서 붙인 버전을 sentence 2로 증강했다.
+| 명사 + 명사 | (단독 입찰 / 단독입찰) |
+| 형용사 + 명사 | (상쾌한 아침 / 상쾌한아침) |
+| 관형사 + 명사 | (이 것 / 이것) |
+| 동사 + 명사 | (빛나는 우리 / 빛나는우리) |
+| 부사 + 동사 | (밝게 빛나 / 밝게빛나) |
+
+만약 label 5를 0과 똑같이 1000개로 증강할 경우 test.csv 를 통과한 output의 분포를 보았을 때, 전체적으로 5.0 쪽에 더 많은 예측이 지속적으로 나오는 것을 관찰할 수 있었다. 이는 5.0 샘플의 특징은 단순하고 적은 반면에, 0 샘플을 예측하기 위해서는 더 많은 것을 고려해야 하기 때문이라고 추측하였다. 그렇기에 5.0 label 증강을 조절하거나 5.0에 주는 penalty를 늘려서 이를 완화하였다.
+
+또한 아래에서 언급될 special token 을 사용하기 위해 5.0 증강된 데이터이 source는 본래의 source를 그대로 가져오고 0에서의 sampled는 rtt로 바꾸어 주었다. 
 
 ## 4) 가설 구현
 - Label Penalty
@@ -56,10 +69,7 @@ dev.csv는 모든 label이 비교적 uniform
     - 5개의 special token을 각각 1차원으로 projection하여 5개의 후보 logits를 생성
     - 학습 가능한 5개의 weights로 logits를 weighted sum하여 최종 logit 생성
 
-## 5) hyperparameter tuning
-
-  
-## 6) ensemble
+## 5) ensemble
 ### weighted average ensemble
 - Ensemble 에 사용할 모델들의 실제 submit score 를 weight 로 사용하여 ensemble 모델의 예측 정확도를 높이려 노력
 - 해당 score 들은 softmax를 통과하여 각 logit 과 곱해진 후 합해지는 weighted sum 의 형태
